@@ -1,14 +1,17 @@
+const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
 const { validationResult } = require('express-validator');
 const User = require('../models/User');
 
+// Configure nodemailer with Mailjet SMTP
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'in-v3.mailjet.com',
+  port: 587,
+  secure: false, // Use TLS
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: process.env.MAILJET_API_KEY,
+    pass: process.env.MAILJET_SECRET_KEY,
   },
 });
 
@@ -87,6 +90,7 @@ const forgotPassword = async (req, res) => {
 
     const resetLink = `http://localhost:3000/reset-password/${token}`;
     await transporter.sendMail({
+      from: process.env.SENDER_EMAIL,
       to: email,
       subject: 'NutriAI Password Reset',
       html: `Click <a href="${resetLink}">here</a> to reset your password. Link expires in 1 hour.`,

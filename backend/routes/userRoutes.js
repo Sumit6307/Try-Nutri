@@ -1,10 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/userController');
 const authMiddleware = require('../middleware/authMiddleware');
+const { getProfile, updateProfile, changePassword } = require('../controllers/userController');
 
-router.get('/profile', authMiddleware, userController.getProfile);
-router.put('/profile', authMiddleware, userController.updateProfile);
-router.put('/change-password', authMiddleware, userController.changePassword);
+// @route   GET /api/user/profile
+router.get('/profile', authMiddleware, getProfile);
+
+// @route   PUT /api/user/profile
+router.put('/profile', authMiddleware, updateProfile);
+
+// @route   PUT /api/user/change-password
+router.put('/change-password', authMiddleware, changePassword);
 
 module.exports = router;

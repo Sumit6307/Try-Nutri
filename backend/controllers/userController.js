@@ -1,21 +1,28 @@
 const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 
-exports.getProfile = async (req, res) => {
+// @desc    Get user profile
+// @route   GET /api/user/profile
+const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await User.findById(req.user.userId).select('-password');
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
     res.json(user);
-  } catch (error) {
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-exports.updateProfile = async (req, res) => {
+// @desc    Update user profile
+// @route   PUT /api/user/profile
+const updateProfile = async (req, res) => {
   const { name, weight, goal } = req.body;
+
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -23,32 +30,39 @@ exports.updateProfile = async (req, res) => {
     user.name = name || user.name;
     user.weight = weight || user.weight;
     user.goal = goal || user.goal;
-    await user.save();
 
+    await user.save();
     res.json(user);
-  } catch (error) {
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-exports.changePassword = async (req, res) => {
+// @desc    Change user password
+// @route   PUT /api/user/change-password
+const changePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;
+
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const isMatch = await user.comparePassword(currentPassword);
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Current password is incorrect' });
     }
 
-    user.password = newPassword;
+    user.password = await bcrypt.hash(newPassword, 10);
     await user.save();
 
     res.json({ message: 'Password changed successfully' });
-  } catch (error) {
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+module.exports = { getProfile, updateProfile, changePassword };

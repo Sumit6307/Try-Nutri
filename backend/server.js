@@ -4,9 +4,9 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
-const authRoutes = require('./routes/authRoutes'); // Updated to authRoutes
-const userRoutes = require('./routes/user');
-const calorieRoutes = require('./routes/calories');
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+const calorieRoutes = require('./routes/calorieRoutes');
 const connectDB = require('./config/db');
 
 const app = express();

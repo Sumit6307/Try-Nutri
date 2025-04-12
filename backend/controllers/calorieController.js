@@ -1,10 +1,13 @@
 const CalorieLog = require('../models/CalorieLog');
 
-exports.addCalorieLog = async (req, res) => {
+// @desc    Create a calorie log
+// @route   POST /api/calories
+const createCalorieLog = async (req, res) => {
   const { food, calories, protein, carbs, fat, mealType } = req.body;
+
   try {
     const log = new CalorieLog({
-      userId: req.user.id,
+      user: req.user.userId,
       food,
       calories,
       protein,
@@ -12,31 +15,46 @@ exports.addCalorieLog = async (req, res) => {
       fat,
       mealType,
     });
+
     await log.save();
-    res.status(201).json(log);
-  } catch (error) {
+    res.json(log);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-exports.getCalorieLogs = async (req, res) => {
+// @desc    Get all calorie logs
+// @route   GET /api/calories
+const getCalorieLogs = async (req, res) => {
   try {
-    const logs = await CalorieLog.find({ userId: req.user.id }).sort({ date: -1 });
+    const logs = await CalorieLog.find({ user: req.user.userId }).sort({ date: -1 });
     res.json(logs);
-  } catch (error) {
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-exports.deleteCalorieLog = async (req, res) => {
+// @desc    Delete a calorie log
+// @route   DELETE /api/calories/:id
+const deleteCalorieLog = async (req, res) => {
   try {
     const log = await CalorieLog.findById(req.params.id);
-    if (!log || log.userId.toString() !== req.user.id) {
+    if (!log) {
       return res.status(404).json({ message: 'Log not found' });
     }
-    await log.remove();
+
+    if (log.user.toString() !== req.user.userId) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    await log.deleteOne();
     res.json({ message: 'Log deleted' });
-  } catch (error) {
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+module.exports = { createCalorieLog, getCalorieLogs, deleteCalorieLog };

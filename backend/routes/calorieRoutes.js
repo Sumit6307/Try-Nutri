@@ -1,12 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const calorieController = require('../controllers/calorieController');
 const authMiddleware = require('../middleware/authMiddleware');
+const { createCalorieLog, getCalorieLogs, deleteCalorieLog } = require('../controllers/calorieController');
 
+// @route   POST /api/calories
+router.post('/', authMiddleware, createCalorieLog);
 
+// @route   GET /api/calories
+router.get('/', authMiddleware, getCalorieLogs);
 
-router.post('/', authMiddleware, calorieController.addCalorieLog);
-router.get('/', authMiddleware, calorieController.getCalorieLogs);
-router.delete('/:id', authMiddleware, calorieController.deleteCalorieLog);
+// @route   DELETE /api/calories/:id
+router.delete('/:id', authMiddleware, deleteCalorieLog);
 
 module.exports = router;
