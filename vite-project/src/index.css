@@ -1,1 +1,24 @@
 @import "tailwindcss";
+
+
+body {
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #34D399 transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #34D399;
+    border-radius: 3px;
+  }

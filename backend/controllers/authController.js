@@ -88,7 +88,7 @@ const forgotPassword = async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    const resetLink = `http://localhost:3000/reset-password/${token}`;
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
     await transporter.sendMail({
       from: process.env.SENDER_EMAIL,
       to: email,
