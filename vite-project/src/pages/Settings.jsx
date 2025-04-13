@@ -40,18 +40,51 @@ const Settings = () => {
     }
     setLoading(true);
     setError('');
+    const payload = {
+      name: profileForm.name.trim(),
+      weight: profileForm.weight ? Number(profileForm.weight) : null,
+      goal: profileForm.goal,
+    };
     try {
-      const res = await axios.put(
-        `${API_URL}/user/profile`,
-        profileForm,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      console.log('Sending profile update:', {
+        payload,
+        token: localStorage.getItem('token'),
+        url: `${API_URL}/user/profile`,
+      });
+      const res = await axios.put(`${API_URL}/user/profile`, payload, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+      console.log('Profile update response:', res.data);
+      if (res.data.user) {
+        if (typeof setUser === 'function') {
+          setUser(res.data.user);
+        } else {
+          console.warn('setUser is not a function, updating localStorage manually');
+          localStorage.setItem('user', JSON.stringify(res.data.user));
         }
-      );
-      setUser({ ...user, ...profileForm }); // Update auth context
+      } else {
+        console.warn('No user data in response:', res.data);
+        if (typeof setUser === 'function') {
+          setUser({ ...user, ...payload });
+        } else {
+          console.warn('setUser is not a function, updating localStorage manually');
+          localStorage.setItem('user', JSON.stringify({ ...user, ...payload }));
+        }
+      }
       setMessage('Profile updated successfully! 🎉');
       setTimeout(() => setMessage(''), 3000);
     } catch (err) {
+      console.error('Profile update error:', {
+        message: err.message,
+        response: err.response ? {
+          status: err.response.status,
+          data: err.response.data,
+          headers: err.response.headers,
+        } : 'No response',
+        url: `${API_URL}/user/profile`,
+        token: localStorage.getItem('token') ? 'Present' : 'Missing',
+        payload,
+      });
       setError(err.response?.data?.message || 'Failed to update profile.');
     }
     setLoading(false);

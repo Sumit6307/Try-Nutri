@@ -34,7 +34,7 @@ const Navbar = () => {
   const navLinks = [
     { to: '/home', label: 'Home', emoji: '🏠' },
     { to: '/scanner', label: 'Scanner', emoji: '📸' },
-    { to: '/profile', label: 'Calorie Counter', emoji: '📈' },
+    { to: '/search', label: 'Calorie Counter', emoji: '📈' },
     { to: '/chatbot', label: 'AI Chatbot', emoji: '🤖' },
   ];
 
