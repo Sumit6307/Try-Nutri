@@ -1,26 +1,20 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { UserPlus } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
     setLoading(true);
+    setError('');
     try {
       await register(email, password, name);
       navigate('/home');
@@ -31,91 +25,82 @@ const Register = () => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-nutri-dark to-gray-800 px-4 sm:px-6 lg:px-8"
-    >
-      <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 max-w-md w-full shadow-xl">
-        <motion.h2
-          initial={{ y: -20 }}
-          animate={{ y: 0 }}
-          className="text-3xl font-bold text-nutri-green mb-6 text-center flex items-center justify-center gap-2"
-        >
-          <UserPlus size={28} />
-          Sign Up
-        </motion.h2>
-        {error && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-red-400 text-center mb-4"
-          >
-            {error}
-          </motion.p>
-        )}
-        <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center px-4 py-24 text-white">
+      <div className="bg-gray-800 rounded-3xl shadow-2xl border border-gray-700 max-w-md w-full p-10">
+        <div className="text-center mb-8">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/3135/3135789.png"
+            alt="Register Icon"
+            className="w-16 h-16 mx-auto mb-4 animate-bounce"
+          />
+          <h2 className="text-4xl font-extrabold text-green-400 font-sans tracking-tight">
+            Join NutriAI!
+          </h2>
+          <p className="text-gray-400 mt-2 text-sm font-light">Create an account to start your health journey</p>
+        </div>
+        {error && <p className="text-red-400 text-center mb-4">{error}</p>}
+        <form onSubmit={handleRegister} className="space-y-6">
           <div>
-            <label className="block text-sm text-gray-300 mb-1">Full Name</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-nutri-green"
-              placeholder="John Doe"
-              required
-            />
+            <label className="block text-sm font-medium text-gray-300 mb-1">Full Name</label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">👤</span>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                placeholder="John Doe"
+                className="w-full pl-10 pr-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+            </div>
           </div>
           <div>
-            <label className="block text-sm text-gray-300 mb-1">Email Address</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-nutri-green"
-              placeholder="you@example.com"
-              required
-            />
+            <label className="block text-sm font-medium text-gray-300 mb-1">Email Address</label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">📧</span>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="you@example.com"
+                className="w-full pl-10 pr-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+            </div>
           </div>
           <div>
-            <label className="block text-sm text-gray-300 mb-1">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-nutri-green"
-              placeholder="••••••••"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-gray-300 mb-1">Confirm Password</label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-nutri-green"
-              placeholder="••••••••"
-              required
-            />
+            <label className="block text-sm font-medium text-gray-300 mb-1">Password</label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">🔒</span>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="••••••••"
+                className="w-full pl-10 pr-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+            </div>
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-nutri-green hover:bg-nutri-accent text-white p-3 rounded-lg font-semibold disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full bg-green-500 hover:bg-green-600 transition-all py-3 rounded-xl text-white font-semibold shadow-md hover:shadow-green-600/50"
           >
             {loading ? 'Signing Up...' : 'Sign Up'}
           </button>
         </form>
-        <div className="mt-4 text-center text-sm text-gray-400">
+        <p className="text-center text-sm text-gray-400 mt-6">
           Already have an account?{' '}
-          <Link to="/login" className="text-nutri-green hover:underline">
+          <Link to="/login" className="text-green-400 hover:underline font-medium">
             Sign In
           </Link>
-        </div>
+        </p>
+        <p className="text-xs text-center text-gray-500 mt-4">
+          Your data stays safe and private. We never share your info.
+        </p>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

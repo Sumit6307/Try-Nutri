@@ -1,24 +1,30 @@
 @import "tailwindcss";
-
-
-body {
-    font-family: 'Inter', sans-serif;
+.animate-fade-in-down {
+    animation: fadeInDown 1s ease-in-out;
   }
   
-  .scrollbar-thin {
-    scrollbar-width: thin;
-    scrollbar-color: #34D399 transparent;
+  .animate-fade-in-up {
+    animation: fadeInUp 1s ease-in-out;
   }
   
-  .scrollbar-thin::-webkit-scrollbar {
-    width: 6px;
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   
-  .scrollbar-thin::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: #34D399;
-    border-radius: 3px;
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }

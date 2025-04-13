@@ -1,9 +1,11 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { motion } from 'framer-motion';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
+  const isGuest = localStorage.getItem('isGuest') === 'true';
 
   if (loading) {
     return (
@@ -17,7 +19,7 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  if (!user) {
+  if (!user && !isGuest) {
     return <Navigate to="/login" replace />;
   }
 
